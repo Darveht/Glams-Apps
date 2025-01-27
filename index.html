@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000; /* Fondo negro */
+            background-color: #000;
             color: white;
             height: 100vh;
             overflow: hidden;
@@ -36,7 +36,7 @@
             font-size: 4rem;
             font-weight: bold;
             animation: pulse 1.5s infinite;
-            color: #FF5733; /* Color del logo */
+            color: #FF5733;
         }
         @keyframes pulse {
             0%, 100% {
@@ -60,51 +60,78 @@
     <!-- Pantalla de bloqueo -->
     <div id="block-screen">
         <div class="logo">Bealy</div>
-        <div class="message">Lo sentimos, esta aplicación no está disponible en tu región.</div>
+        <div class="message">Lo sentimos, esta aplicación no está disponible en tu ubicación.</div>
     </div>
 
-    <!-- Contenido principal (solo visible si el usuario está permitido) -->
+    <!-- Contenido principal -->
     <div id="main-content" style="display: none;">
         <h1>Bienvenido a Bealy</h1>
         <p>Accede a todo el contenido exclusivo.</p>
     </div>
 
     <script>
-        // Función para detectar la ubicación en tiempo real
-        function detectLocation() {
+        // Coordenadas bloqueadas (latitud, longitud y tolerancia en kilómetros)
+        const blockedLocations = [
+            { city: "Spring Valley", lat: 29.7896700, lon: -95.5035500, tolerance: 10 },
+            { city: "West University Place", lat: 29.7180100, lon: -95.4338300, tolerance: 10 },
+            { city: "Piney Point Village", lat: 29.7599500, lon: -95.5171600, tolerance: 10 },
+            { city: "Bellaire", lat: 29.7057900, lon: -95.4588300, tolerance: 10 },
+            { city: "Houston", lat: 29.749907, lon: -95.358421, tolerance: 15 },
+            { city: "Manhattan", lat: 12.345, lon: -67.890, tolerance: 5 }
+        ];
+
+        // Función para calcular la distancia entre dos coordenadas (en kilómetros)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radio de la Tierra en km
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distancia en km
+        }
+
+        // Verificar ubicación del usuario
+        function checkLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    async (position) => {
+                    (position) => {
                         const { latitude, longitude } = position.coords;
 
-                        // Utilizar una API para obtener el país (ejemplo con geoplugin.net)
-                        const response = await fetch(`https://www.geoplugin.net/json.gp?lat=${latitude}&lon=${longitude}`);
-                        const data = await response.json();
-                        const country = data.geoplugin_countryName;
+                        // Verificar si el usuario está en una ubicación bloqueada
+                        let isBlocked = false;
+                        for (const location of blockedLocations) {
+                            const distance = calculateDistance(latitude, longitude, location.lat, location.lon);
+                            if (distance <= location.tolerance) {
+                                isBlocked = true;
+                                console.log(`Bloqueado: ${location.city} (Distancia: ${distance.toFixed(2)} km)`);
+                                break;
+                            }
+                        }
 
-                        // Lista de países permitidos
-                        const allowedCountries = ["Estados Unidos", "México", "España"];
-
-                        if (allowedCountries.includes(country)) {
-                            // Si el país está permitido, ocultar el bloqueo y mostrar el contenido
+                        if (isBlocked) {
+                            // Mostrar pantalla de bloqueo
+                            document.getElementById("block-screen").classList.remove("hidden");
+                            document.getElementById("main-content").style.display = "none";
+                        } else {
+                            // Desbloquear contenido
                             document.getElementById("block-screen").classList.add("hidden");
                             document.getElementById("main-content").style.display = "block";
-                        } else {
-                            // Si no está permitido, mantener el bloqueo
-                            console.log("Región no permitida:", country);
                         }
                     },
                     (error) => {
-                        alert("Error al obtener la ubicación: " + error.message);
+                        console.error("Error al obtener la ubicación:", error.message);
                     }
                 );
             } else {
-                alert("Tu navegador no soporta geolocalización.");
+                console.error("Tu navegador no soporta geolocalización.");
             }
         }
 
-        // Detectar ubicación al cargar la página
-        window.onload = detectLocation;
+        // Verificar ubicación al cargar la página
+        window.onload = checkLocation;
     </script>
 </body>
 </html>
