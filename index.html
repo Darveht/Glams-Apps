@@ -84,305 +84,612 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grabación Estilo TikTok</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: black;
-            color: white;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        #video-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #camera-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        #countdown-timer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            color: #FFEA00;
-            z-index: 100;
-            display: none;
-        }
-        #bottom-controls {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            padding: 10px;
-        }
-        .control-button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        #record-button-container {
-            position: relative;
-            width: 80px;
-            height: 80px;
-        }
-        #record-button {
-            background-color: #FFEA00;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 5px solid white;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-        svg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        circle {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.4);
-            stroke-width: 5;
-        }
-        .progress-ring-circle {
-            stroke: #FFEA00;
-            stroke-width: 5;
-            stroke-linecap: round;
-            stroke-dasharray: 220; /* Circunferencia inicial */
-            stroke-dashoffset: 220; /* Ocultar el trazo inicialmente */
-            transition: stroke-dashoffset 0.1s linear;
-        }
-        #timer-options {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-        .timer-option {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 5px 10px;
-            border: 2px solid white;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .timer-option:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .hidden {
-            display: none;
-        }
-        #check-icon {
-            font-size: 40px;
-            color: yellow; /* Color amarillo para la palomita */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grabación Estilo TikTok</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Bloquea los gestos por defecto */
+    #video-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: none;
+    }
+    #camera-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Muestra el nombre del filtro en la esquina superior derecha */
+    #filter-name {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 18px;
+      display: none;
+      z-index: 200;
+    }
+    #countdown-timer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 5rem;
+      color: #FFEA00;
+      z-index: 100;
+      display: none;
+    }
+    #bottom-controls {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 10px;
+      z-index: 150;
+    }
+    .control-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    #record-button-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    /* Selector de modo (video/foto) posicionado sobre el botón de grabación */
+    #mode-selector {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 200;
+    }
+    .mode-button {
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      font-size: 18px;
+      padding: 5px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .mode-button.active {
+      background: #FFEA00;
+      color: black;
+    }
+    #record-button {
+      background-color: #FFEA00;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 5px solid white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    circle {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.4);
+      stroke-width: 5;
+    }
+    .progress-ring-circle {
+      stroke: #FFEA00;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 220; /* Circunferencia inicial */
+      stroke-dashoffset: 220; /* Ocultar el trazo inicialmente */
+      transition: stroke-dashoffset 0.1s linear;
+    }
+    #timer-options {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 150;
+    }
+    .timer-option {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 5px 10px;
+      border: 2px solid white;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .timer-option:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .hidden {
+      display: none;
+    }
+    #check-icon {
+      font-size: 40px;
+      color: yellow; /* Color amarillo para la palomita */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 200;
+    }
+    /* Overlay para previsualización de foto */
+    #photo-preview-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+    }
+    #photo-preview-overlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 5px solid #FFEA00;
+      border-radius: 10px;
+    }
+    /* Overlay para previsualización de video */
+    #video-preview-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+    }
+    #video-preview-overlay video {
+      max-width: 90%;
+      max-height: 90%;
+      border: 5px solid #FFEA00;
+      border-radius: 10px;
+    }
+    /* Elemento para simular flash */
+    #flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 250;
+    }
+  </style>
 </head>
 <body>
-    <div id="video-container">
-        <video id="camera-preview" autoplay playsinline muted></video>
-        <div id="countdown-timer"></div>
-        <audio id="music-player"></audio>
-    </div>
-    
-    <div id="timer-options">
-        <div class="timer-option" onclick="setTimer(3)">03s</div>
-        <div class="timer-option" onclick="setTimer(15)">15s</div>
-        <div class="timer-option" onclick="setTimer(40)">40s</div>
-    </div>
-    
-    <div id="bottom-controls">
-        <button class="control-button" onclick="selectMusic()" id="music-button">
-            <i class="fas fa-music"></i>
-        </button>
-        <div id="record-button-container">
-            <svg width="80" height="80">
-                <circle cx="40" cy="40" r="35"></circle>
-                <circle class="progress-ring-circle" cx="40" cy="40" r="35"></circle>
-            </svg>
-            <button id="record-button" onclick="toggleRecording()"></button>
-        </div>
-        <button class="control-button" onclick="switchCamera()" id="camera-button">
-            <i class="fas fa-camera-rotate"></i>
-        </button>
-        <div id="check-icon" onclick="redirectToTikTok()">
-            <i class="fas fa-check-circle"></i>
-        </div>
-    </div>
-
-    <script>
-        const videoPreview = document.getElementById('camera-preview');
-        const musicPlayer = document.getElementById('music-player');
-        const countdownTimer = document.getElementById('countdown-timer');
-        const progressCircle = document.querySelector('.progress-ring-circle');
-        const timerOptions = document.getElementById('timer-options');
-        const checkIcon = document.getElementById('check-icon');
-        const cameraButton = document.getElementById('camera-button');
-        
-        let timerDuration = 0;
-        let recordingDuration = 10;
-        let currentStream;
-        let isFrontCamera = true;
-        let isRecording = false;
-        let progressInterval;
-
-        const circumference = 220;
-
-        async function initCamera() {
-            const constraints = {
-                video: {
-                    facingMode: isFrontCamera ? 'user' : 'environment',
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 }
-                },
-                audio: false
-            };
-
-            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-            videoPreview.srcObject = currentStream;
-        }
-
-        function setTimer(seconds) {
-            timerDuration = seconds;
-        }
-
-        async function startCountdown() {
-            return new Promise((resolve) => {
-                let remaining = timerDuration;
-                countdownTimer.style.display = 'block';
-                countdownTimer.textContent = remaining;
-
-                const interval = setInterval(() => {
-                    remaining--;
-                    countdownTimer.textContent = remaining;
-
-                    if (remaining <= 0) {
-                        clearInterval(interval);
-                        countdownTimer.style.display = 'none';
-                        resolve();
-                    }
-                }, 1000);
-            });
-        }
-
-        function startProgressAnimation() {
-            const audioDuration = musicPlayer.duration || recordingDuration;
-            const step = circumference / (audioDuration * 10);
-            let offset = circumference;
-
-            progressInterval = setInterval(() => {
-                offset -= step;
-                progressCircle.style.strokeDashoffset = offset;
-
-                if (offset <= 0) {
-                    clearInterval(progressInterval);
-                    stopRecording();
-                }
-            }, 100);
-        }
-
-        function resetProgressBar() {
-            progressCircle.style.transition = 'stroke-dashoffset 0.3s linear';
-            progressCircle.style.strokeDashoffset = circumference;
-            setTimeout(() => {
-                progressCircle.style.transition = 'stroke-dashoffset 0.1s linear';
-            }, 300);
-        }
-
-        async function toggleRecording() {
-            if (isRecording) {
-                stopRecording();
-            } else {
-                if (timerDuration > 0) {
-                    await startCountdown();
-                }
-
-                isRecording = true;
-                musicPlayer.play();
-                startProgressAnimation();
-
-                // Ocultar botones adicionales y opciones de tiempo durante la grabación
-                document.getElementById('music-button').classList.add('hidden');
-                cameraButton.classList.add('hidden');
-                timerOptions.classList.add('hidden'); // Ocultar opciones de tiempo
-            }
-        }
-
-        function stopRecording() {
-            clearInterval(progressInterval);
-            resetProgressBar();
-            musicPlayer.pause();
-            musicPlayer.currentTime = 0;
-            isRecording = false;
-            console.log("Grabación detenida.");
-
-            // Mostrar botones nuevamente después de la grabación
-            document.getElementById('music-button').classList.remove('hidden');
-            cameraButton.classList.add('hidden'); // Ocultar la función de cambiar cámara
-            timerOptions.classList.remove('hidden'); // Mostrar opciones de tiempo
-
-            // Reemplazar el icono de la cámara con la palomita
-            checkIcon.style.display = 'block';
-        }
-
-        function selectMusic() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'audio/*';
-            input.onchange = e => {
-                const file = e.target.files[0];
-                musicPlayer.src = URL.createObjectURL(file);
-            };
-            input.click();
-        }
-
-        function switchCamera() {
-            isFrontCamera = !isFrontCamera;
-            currentStream.getTracks().forEach(track => track.stop());
-            initCamera();
-        }
-
-        function redirectToTikTok() {
-            // Redirigir al editor de TikTok para compartir el video grabado
-            window.location.href = "https://www.tiktok.com/upload"; // Esta es la URL de carga de TikTok, ajusta según sea necesario
-        }
-
-        initCamera();
-    </script>
-</body>
-</html>
-<!-- partial -->
+  <div id="video-container">
+    <video id="camera-preview" autoplay playsinline muted></video>
+    <div id="flash"></div>
+    <div id="filter-name"></div>
+    <div id="countdown-timer"></div>
+    <audio id="music-player"></audio>
+  </div>
   
+  <!-- Overlay de previsualización de foto -->
+  <div id="photo-preview-overlay">
+    <img id="photo-preview-image" src="" alt="Foto capturada">
+  </div>
+  
+  <!-- Overlay de previsualización de video -->
+  <div id="video-preview-overlay">
+    <video id="video-preview-player" controls></video>
+  </div>
+  
+  <div id="timer-options">
+    <div class="timer-option" onclick="setTimer(3)">03s</div>
+    <div class="timer-option" onclick="setTimer(15)">15s</div>
+    <div class="timer-option" onclick="setTimer(40)">40s</div>
+  </div>
+  
+  <div id="bottom-controls">
+    <button class="control-button" onclick="selectMusic()" id="music-button">
+      <i class="fas fa-music"></i>
+    </button>
+    <div id="record-button-container">
+      <!-- Selector de modo: Video o Foto -->
+      <div id="mode-selector">
+        <button id="video-mode" class="mode-button active" onclick="selectMode('video')">
+          <i class="fas fa-video"></i>
+        </button>
+        <button id="photo-mode" class="mode-button" onclick="selectMode('photo')">
+          <i class="fas fa-camera"></i>
+        </button>
+      </div>
+      <svg width="80" height="80">
+        <circle cx="40" cy="40" r="35"></circle>
+        <circle class="progress-ring-circle" cx="40" cy="40" r="35"></circle>
+      </svg>
+      <!-- Se actualiza el onclick para llamar a handleRecordButton() -->
+      <button id="record-button" onclick="handleRecordButton()"></button>
+    </div>
+    <button class="control-button" onclick="switchCamera()" id="camera-button">
+      <i class="fas fa-camera-rotate"></i>
+    </button>
+    <div id="check-icon" onclick="redirectToTikTok()">
+      <i class="fas fa-check-circle"></i>
+    </div>
+  </div>
+
+  <script>
+    const videoPreview = document.getElementById('camera-preview');
+    const musicPlayer = document.getElementById('music-player');
+    const countdownTimer = document.getElementById('countdown-timer');
+    const progressCircle = document.querySelector('.progress-ring-circle');
+    const timerOptions = document.getElementById('timer-options');
+    const checkIcon = document.getElementById('check-icon');
+    const cameraButton = document.getElementById('camera-button');
+    const filterNameEl = document.getElementById('filter-name');
+    
+    const photoPreviewOverlay = document.getElementById('photo-preview-overlay');
+    const photoPreviewImage = document.getElementById('photo-preview-image');
+    const videoPreviewOverlay = document.getElementById('video-preview-overlay');
+    const videoPreviewPlayer = document.getElementById('video-preview-player');
+    const flashEl = document.getElementById('flash');
+
+    let timerDuration = 0;
+    let recordingDuration = 10;
+    let currentStream;
+    let isFrontCamera = true;
+    let isRecording = false;
+    let progressInterval;
+    const circumference = 220;
+
+    // Variables para grabación de video
+    let mediaRecorder;
+    let recordedChunks = [];
+
+    // Variable para el modo actual: 'video' o 'photo'
+    let currentMode = 'video';
+
+    // Se actualizan las restricciones para solicitar (idealmente) 8K
+    async function initCamera() {
+      const constraints = {
+        video: {
+          facingMode: isFrontCamera ? 'user' : 'environment',
+          width: { ideal: 7680 },
+          height: { ideal: 4320 }
+        },
+        audio: false
+      };
+      try {
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (error) {
+        console.error("No se pudo obtener 8K, usando resolución por defecto.", error);
+        // Si falla, se usa resolución por defecto
+        currentStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: isFrontCamera ? 'user' : 'environment' },
+          audio: false
+        });
+      }
+      videoPreview.srcObject = currentStream;
+    }
+
+    function setTimer(seconds) {
+      timerDuration = seconds;
+    }
+
+    async function startCountdown() {
+      return new Promise((resolve) => {
+        let remaining = timerDuration;
+        countdownTimer.style.display = 'block';
+        countdownTimer.textContent = remaining;
+        const interval = setInterval(() => {
+          remaining--;
+          countdownTimer.textContent = remaining;
+          if (remaining <= 0) {
+            clearInterval(interval);
+            countdownTimer.style.display = 'none';
+            resolve();
+          }
+        }, 1000);
+      });
+    }
+
+    function startProgressAnimation() {
+      const audioDuration = musicPlayer.duration || recordingDuration;
+      const step = circumference / (audioDuration * 10);
+      let offset = circumference;
+      progressInterval = setInterval(() => {
+        offset -= step;
+        progressCircle.style.strokeDashoffset = offset;
+        if (offset <= 0) {
+          clearInterval(progressInterval);
+          stopRecording();
+        }
+      }, 100);
+    }
+
+    function resetProgressBar() {
+      progressCircle.style.transition = 'stroke-dashoffset 0.3s linear';
+      progressCircle.style.strokeDashoffset = circumference;
+      setTimeout(() => {
+        progressCircle.style.transition = 'stroke-dashoffset 0.1s linear';
+      }, 300);
+    }
+
+    // Maneja la acción del botón según el modo seleccionado
+    function handleRecordButton() {
+      if (currentMode === 'video') {
+        toggleRecording();
+      } else if (currentMode === 'photo') {
+        capturePhoto();
+      }
+    }
+
+    // Función para grabar video (modo video) usando MediaRecorder
+    async function toggleRecording() {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        if (timerDuration > 0) {
+          await startCountdown();
+        }
+        if (currentMode === 'video') {
+          recordedChunks = [];
+          // Se definen opciones para intentar grabar en mayor calidad (por ejemplo, 80 Mbps)
+          let options = { mimeType: "video/webm; codecs=vp9", videoBitsPerSecond: 80000000 };
+          try {
+            mediaRecorder = new MediaRecorder(currentStream, options);
+          } catch (e) {
+            console.warn("No se pudo usar la opción de alta calidad, se usa la predeterminada.", e);
+            mediaRecorder = new MediaRecorder(currentStream);
+          }
+          mediaRecorder.ondataavailable = function(event) {
+            if (event.data && event.data.size > 0) {
+              recordedChunks.push(event.data);
+            }
+          };
+          mediaRecorder.onstop = function(event) {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const videoURL = URL.createObjectURL(blob);
+            showVideoPreview(videoURL, blob);
+          };
+          mediaRecorder.start();
+        }
+        isRecording = true;
+        musicPlayer.play();
+        startProgressAnimation();
+        document.getElementById('music-button').classList.add('hidden');
+        cameraButton.classList.add('hidden');
+        timerOptions.classList.add('hidden');
+      }
+    }
+
+    // Para detener la grabación (modo video)
+    function stopRecording() {
+      clearInterval(progressInterval);
+      resetProgressBar();
+      if (currentMode === 'video') {
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+        }
+        isRecording = false;
+        document.getElementById('music-button').classList.remove('hidden');
+        cameraButton.classList.add('hidden');
+        timerOptions.classList.remove('hidden');
+      }
+    }
+
+    // Función para capturar foto (modo photo)
+    function capturePhoto() {
+      // Efecto flash
+      flashEl.style.opacity = 1;
+      setTimeout(() => {
+        flashEl.style.transition = "opacity 0.5s ease-out";
+        flashEl.style.opacity = 0;
+      }, 50);
+      const canvas = document.createElement('canvas');
+      canvas.width = videoPreview.videoWidth;
+      canvas.height = videoPreview.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(videoPreview, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/png');
+      // Mostrar la foto en el overlay de previsualización
+      photoPreviewImage.src = dataURL;
+      photoPreviewOverlay.style.display = 'flex';
+
+      // Configurar eventos para detectar long press y guardar la imagen
+      let pressTimer;
+      photoPreviewImage.addEventListener('mousedown', startLongPress);
+      photoPreviewImage.addEventListener('touchstart', startLongPress);
+      photoPreviewImage.addEventListener('mouseup', cancelLongPress);
+      photoPreviewImage.addEventListener('touchend', cancelLongPress);
+
+      function startLongPress(e) {
+        pressTimer = window.setTimeout(() => {
+          savePhoto(dataURL);
+        }, 1000); // Long press de 1 segundo
+      }
+      function cancelLongPress(e) {
+        clearTimeout(pressTimer);
+      }
+    }
+
+    // Función para descargar la foto
+    function savePhoto(dataURL) {
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = 'foto.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // Función para mostrar la previsualización del video grabado
+    function showVideoPreview(videoURL, blob) {
+      videoPreviewPlayer.src = videoURL;
+      videoPreviewOverlay.style.display = 'flex';
+
+      // Configurar long press para guardar el video
+      let pressTimer;
+      videoPreviewPlayer.addEventListener('mousedown', startLongPress);
+      videoPreviewPlayer.addEventListener('touchstart', startLongPress);
+      videoPreviewPlayer.addEventListener('mouseup', cancelLongPress);
+      videoPreviewPlayer.addEventListener('touchend', cancelLongPress);
+
+      function startLongPress(e) {
+        pressTimer = window.setTimeout(() => {
+          downloadVideo(blob);
+        }, 1000); // Long press de 1 segundo
+      }
+      function cancelLongPress(e) {
+        clearTimeout(pressTimer);
+      }
+    }
+
+    // Función para descargar el video
+    function downloadVideo(blob) {
+      const a = document.createElement('a');
+      const videoURL = URL.createObjectURL(blob);
+      a.href = videoURL;
+      a.download = 'video.webm';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function selectMusic() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'audio/*';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        musicPlayer.src = URL.createObjectURL(file);
+      };
+      input.click();
+    }
+
+    function switchCamera() {
+      isFrontCamera = !isFrontCamera;
+      currentStream.getTracks().forEach(track => track.stop());
+      initCamera();
+    }
+
+    function redirectToTikTok() {
+      window.location.href = "https://www.tiktok.com/upload";
+    }
+
+    // Detección de swipe para aplicar filtro similar a TikTok
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const filtros = [
+      '', 
+      'grayscale(100%)', 
+      'sepia(100%)', 
+      'invert(100%)', 
+      'contrast(150%)'
+    ];
+    const filterLabels = [
+      'Normal',
+      'Grayscale',
+      'Sepia',
+      'Invertido',
+      'Contraste'
+    ];
+    let indiceFiltroActual = 0;
+    const videoContainer = document.getElementById('video-container');
+
+    videoContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, false);
+
+    videoContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      detectarSwipe();
+    }, false);
+
+    videoContainer.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    function detectarSwipe() {
+      const diferencia = touchEndX - touchStartX;
+      const umbral = 50;
+      if (Math.abs(diferencia) > umbral) {
+        indiceFiltroActual = (indiceFiltroActual + 1) % filtros.length;
+        aplicarFiltro(filtros[indiceFiltroActual]);
+      }
+    }
+
+    function aplicarFiltro(filtro) {
+      videoPreview.style.filter = filtro;
+      filterNameEl.innerText = filterLabels[indiceFiltroActual];
+      filterNameEl.style.display = 'block';
+      setTimeout(() => {
+        filterNameEl.style.display = 'none';
+      }, 1500);
+    }
+
+    // Función para seleccionar el modo (video o photo)
+    function selectMode(mode) {
+      currentMode = mode;
+      if (mode === 'video') {
+        document.getElementById('video-mode').classList.add('active');
+        document.getElementById('photo-mode').classList.remove('active');
+      } else if (mode === 'photo') {
+        document.getElementById('photo-mode').classList.add('active');
+        document.getElementById('video-mode').classList.remove('active');
+      }
+    }
+
+    // Cierra el overlay de foto al tocar fuera de la imagen
+    photoPreviewOverlay.addEventListener('click', function(e) {
+      if (e.target === photoPreviewOverlay) {
+        photoPreviewOverlay.style.display = 'none';
+      }
+    });
+
+    // Cierra el overlay de video al tocar fuera del reproductor
+    videoPreviewOverlay.addEventListener('click', function(e) {
+      if (e.target === videoPreviewOverlay) {
+        videoPreviewOverlay.style.display = 'none';
+      }
+    });
+
+    initCamera();
+  </script>
 </body>
 </html>
