@@ -316,16 +316,17 @@
       text-align: center;
     }
     
-    .bear-face {
+    .music-symbol {
       font-size: 120px;
       color: #FFFF66;
       text-shadow: 0 0 20px rgba(255, 255, 102, 0.5);
-      animation: bearBounce 1.5s ease-in-out infinite;
+      animation: musicBounce 1.5s ease-in-out infinite;
       margin-bottom: 20px;
+      font-family: 'Arial', sans-serif;
     }
     
-    .bear-wink {
-      animation: winkAnimation 2s ease-in-out infinite;
+    .rotating-note {
+      animation: rotateNote 2s linear infinite;
     }
     
     .loading-text {
@@ -342,21 +343,30 @@
       animation: notesFloat 2s ease-in-out infinite;
     }
     
-    @keyframes bearBounce {
+    @keyframes musicBounce {
       0%, 100% {
-        transform: translateY(0) scale(1);
+        transform: translateY(0) scale(1) rotate(0deg);
       }
       50% {
-        transform: translateY(-10px) scale(1.1);
+        transform: translateY(-15px) scale(1.2) rotate(10deg);
       }
     }
     
-    @keyframes winkAnimation {
-      0%, 85%, 100% {
-        content: "🐻";
+    @keyframes rotateNote {
+      0% {
+        transform: rotate(0deg) scale(1);
       }
-      90%, 95% {
-        content: "😉";
+      25% {
+        transform: rotate(90deg) scale(1.1);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.2);
+      }
+      75% {
+        transform: rotate(270deg) scale(1.1);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
       }
     }
     
@@ -403,12 +413,12 @@
     <video id="video-preview-player" controls></video>
   </div>
   
-  <!-- Overlay de carga de música con oso limón -->
+  <!-- Overlay de carga de música con símbolos musicales -->
   <div id="music-loading">
     <div class="bear-container">
-      <div class="bear-face bear-wink">🐻</div>
+      <div class="music-symbol rotating-note">♪</div>
       <div class="loading-text">Cargando música...</div>
-      <div class="music-notes">🎵 🎶 🎵</div>
+      <div class="music-notes">♫ ♪ ♬ ♩ ♫</div>
     </div>
   </div>
   
@@ -419,6 +429,9 @@
   </div>
   
   <div id="bottom-controls">
+    <button class="control-button" onclick="goToAuth()" id="auth-button">
+      <i class="fas fa-user"></i>
+    </button>
     <button class="control-button" onclick="selectMusic()" id="music-button">
       <i class="fas fa-music"></i>
     </button>
@@ -739,6 +752,10 @@
 
     function redirectToTikTok() {
       window.location.href = "https://www.tiktok.com/upload";
+    }
+
+    function goToAuth() {
+      window.location.href = "auth.html";
     }
 
     // Detección de swipe para aplicar filtro similar a TikTok
