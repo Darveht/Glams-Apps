@@ -310,7 +310,7 @@
 
     <!-- Contenido principal -->
     <div class="main-content">
-      <!-- Formulario de Login -->
+            <!-- Formulario de Login -->
       <div id="login-form" class="auth-form">
         <h1 class="form-title">¡Hola!</h1>
         <p class="form-subtitle">Inicia sesión para continuar creando contenido increíble</p>
@@ -329,70 +329,16 @@
           <button type="submit" class="auth-button">Iniciar Sesión</button>
         </form>
         
+        <p class="terms-text">By continuing, you agree to the Terms of Services and acknowledge that you have read the Privacy Policy on how we collect and use your data.</p>
+        
         <div class="form-links">
           <a href="#" class="auth-link" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a>
-        </div>
-
-        <div class="form-switch-text">
-          ¿No tienes cuenta?
-          <a href="#" class="switch-link" onclick="showRegister()">Regístrate</a>
-        </div>
-      </div>
-
-      <!-- Formulario de Registro -->
-      <div id="register-form" class="auth-form hidden">
-        <h1 class="form-title">Crear Cuenta</h1>
-        <p class="form-subtitle">Únete a la comunidad de creadores</p>
-        
-        <div id="register-message"></div>
-        
-        <form onsubmit="handleRegister(event)">
-          <div class="form-group">
-            <input type="text" class="form-input" placeholder="Nombre completo" required>
+          <div class="form-switch-text">
+            ¿No tienes cuenta?
+            <a href="#" class="switch-link" onclick="showRegister()">Regístrate</a>
           </div>
-          
-          <div class="form-group">
-            <input type="email" class="form-input" placeholder="Correo electrónico" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="password" class="form-input" placeholder="Contraseña" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="password" class="form-input" placeholder="Confirmar contraseña" required>
-          </div>
-          
-          <button type="submit" class="auth-button">Crear Cuenta</button>
-        </form>
-
-        <div class="form-switch-text">
-          ¿Ya tienes cuenta?
-          <a href="#" class="switch-link" onclick="showLogin()">Inicia sesión</a>
         </div>
       </div>
-
-      <!-- Formulario de Recuperación de Contraseña -->
-      <div id="forgot-form" class="auth-form hidden">
-        <h1 class="form-title">Recuperar</h1>
-        <p class="form-subtitle">Te enviaremos un enlace para restablecer tu contraseña</p>
-        
-        <div id="forgot-message"></div>
-        
-        <form onsubmit="handleForgotPassword(event)">
-          <div class="form-group">
-            <input type="email" class="form-input" placeholder="Correo electrónico" required>
-          </div>
-          
-          <button type="submit" class="auth-button">Enviar Enlace</button>
-        </form>
-
-        <div class="form-switch-text">
-          <a href="#" class="switch-link" onclick="showLogin()">Volver al inicio de sesión</a>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
     function showLogin() {
