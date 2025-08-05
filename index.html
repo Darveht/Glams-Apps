@@ -297,6 +297,91 @@
       pointer-events: none;
       z-index: 250;
     }
+    
+    /* Animación de carga de música - Oso limón */
+    #music-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 400;
+    }
+    
+    .bear-container {
+      text-align: center;
+    }
+    
+    .bear-face {
+      font-size: 120px;
+      color: #FFFF66;
+      text-shadow: 0 0 20px rgba(255, 255, 102, 0.5);
+      animation: bearBounce 1.5s ease-in-out infinite;
+      margin-bottom: 20px;
+    }
+    
+    .bear-wink {
+      animation: winkAnimation 2s ease-in-out infinite;
+    }
+    
+    .loading-text {
+      color: #FFFF66;
+      font-size: 24px;
+      font-weight: bold;
+      animation: textPulse 1s ease-in-out infinite alternate;
+    }
+    
+    .music-notes {
+      font-size: 30px;
+      color: #FFFF66;
+      margin-top: 10px;
+      animation: notesFloat 2s ease-in-out infinite;
+    }
+    
+    @keyframes bearBounce {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-10px) scale(1.1);
+      }
+    }
+    
+    @keyframes winkAnimation {
+      0%, 85%, 100% {
+        content: "🐻";
+      }
+      90%, 95% {
+        content: "😉";
+      }
+    }
+    
+    @keyframes textPulse {
+      0% {
+        opacity: 0.7;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+    
+    @keyframes notesFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-5px) rotate(5deg);
+      }
+      75% {
+        transform: translateY(5px) rotate(-5deg);
+      }
+    }
   </style>
 </head>
 <body>
@@ -316,6 +401,15 @@
   <!-- Overlay de previsualización de video -->
   <div id="video-preview-overlay">
     <video id="video-preview-player" controls></video>
+  </div>
+  
+  <!-- Overlay de carga de música con oso limón -->
+  <div id="music-loading">
+    <div class="bear-container">
+      <div class="bear-face bear-wink">🐻</div>
+      <div class="loading-text">Cargando música...</div>
+      <div class="music-notes">🎵 🎶 🎵</div>
+    </div>
   </div>
   
   <div id="timer-options">
@@ -597,9 +691,44 @@
       input.accept = 'audio/*';
       input.onchange = e => {
         const file = e.target.files[0];
-        musicPlayer.src = URL.createObjectURL(file);
+        if (file) {
+          // Mostrar animación de carga
+          showMusicLoading();
+          
+          // Crear URL del archivo y configurar el reproductor
+          const audioURL = URL.createObjectURL(file);
+          musicPlayer.src = audioURL;
+          
+          // Simular tiempo de carga y ocultar animación
+          setTimeout(() => {
+            hideMusicLoading();
+            // Opcional: mostrar confirmación de que la música se cargó
+            showMusicLoadedConfirmation();
+          }, 2000); // 2 segundos de animación
+        }
       };
       input.click();
+    }
+    
+    function showMusicLoading() {
+      document.getElementById('music-loading').style.display = 'flex';
+    }
+    
+    function hideMusicLoading() {
+      document.getElementById('music-loading').style.display = 'none';
+    }
+    
+    function showMusicLoadedConfirmation() {
+      // Cambiar temporalmente el ícono del botón de música para mostrar que se cargó
+      const musicButton = document.getElementById('music-button');
+      const originalHTML = musicButton.innerHTML;
+      musicButton.innerHTML = '<i class="fas fa-check" style="color: #FFFF66;"></i>';
+      musicButton.style.backgroundColor = 'rgba(255, 255, 102, 0.2)';
+      
+      setTimeout(() => {
+        musicButton.innerHTML = originalHTML;
+        musicButton.style.backgroundColor = '';
+      }, 2000);
     }
 
     function switchCamera() {
