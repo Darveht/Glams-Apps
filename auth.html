@@ -15,58 +15,78 @@
 
     body {
       font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #FFFFFF;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
+      color: #333;
     }
 
     .auth-container {
       width: 100%;
-      height: 100vh;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .header {
+      padding: 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F5F5F5;
     }
 
-    .auth-form {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 40px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
-      transform: scale(0.9);
-      animation: slideIn 0.6s ease forwards;
+    .back-button {
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
     }
 
-    @keyframes slideIn {
-      to {
-        transform: scale(1);
-      }
+    .back-button:hover {
+      background: #F9F9F9;
     }
 
     .logo {
-      font-size: 3rem;
+      font-size: 1.8rem;
       font-weight: bold;
-      margin-bottom: 10px;
-      background: linear-gradient(45deg, #FFFF66, #FFD700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #FFEB3B;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
-    .subtitle {
-      font-size: 1.1rem;
-      margin-bottom: 30px;
-      opacity: 0.8;
+    .main-content {
+      flex: 1;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .auth-form {
+      width: 100%;
+    }
+
+    .form-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 40px;
+      text-align: center;
     }
 
     .form-group {
@@ -76,256 +96,300 @@
 
     .form-input {
       width: 100%;
-      padding: 15px 50px 15px 20px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      padding: 16px 20px;
+      border: 2px solid #F0F0F0;
+      border-radius: 12px;
+      background: #FFFFFF;
+      color: #333;
       font-size: 16px;
       transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-    }
-
-    .form-input::placeholder {
-      color: rgba(255, 255, 255, 0.7);
     }
 
     .form-input:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 20px rgba(255, 255, 102, 0.3);
+      border-color: #FFEB3B;
+      box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.1);
     }
 
-    .input-icon {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.7);
+    .form-input::placeholder {
+      color: #999;
     }
 
     .auth-button {
       width: 100%;
-      padding: 15px;
+      padding: 18px;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(45deg, #FFFF66, #FFD700);
+      border-radius: 12px;
+      background: #FFEB3B;
       color: #333;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
       margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(255, 235, 59, 0.3);
     }
 
     .auth-button:hover {
+      background: #FDD835;
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255, 255, 102, 0.4);
+      box-shadow: 0 6px 16px rgba(255, 235, 59, 0.4);
     }
 
-    .auth-links {
+    .auth-button:active {
+      transform: translateY(0);
+    }
+
+    .form-links {
       display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 30px;
     }
 
     .auth-link {
-      color: #FFFF66;
+      color: #FFEB3B;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 16px;
+      text-align: center;
+      padding: 10px;
       transition: all 0.3s ease;
+      border-radius: 8px;
     }
 
     .auth-link:hover {
-      text-shadow: 0 0 10px #FFFF66;
+      background: rgba(255, 235, 59, 0.1);
+      color: #FDD835;
     }
 
-    .form-switch {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    .divider {
+      margin: 30px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #E0E0E0;
+    }
+
+    .divider span {
+      background: #FFFFFF;
+      padding: 0 20px;
+      color: #666;
+      font-size: 14px;
     }
 
     .hidden {
       display: none;
     }
 
-    .success-message {
-      background: rgba(76, 175, 80, 0.2);
-      border: 1px solid rgba(76, 175, 80, 0.5);
+    .message {
       padding: 15px;
       border-radius: 10px;
       margin-bottom: 20px;
-      animation: fadeIn 0.5s ease;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .success-message {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4CAF50;
+      border: 1px solid rgba(76, 175, 80, 0.3);
     }
 
     .error-message {
-      background: rgba(244, 67, 54, 0.2);
-      border: 1px solid rgba(244, 67, 54, 0.5);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      animation: fadeIn 0.5s ease;
+      background: rgba(244, 67, 54, 0.1);
+      color: #F44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .back-button {
-      position: absolute;
-      top: 30px;
-      left: 30px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: white;
-      padding: 12px 16px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .back-button:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
-    }
-
-    .floating-elements {
+    .floating-shapes {
       position: absolute;
       width: 100%;
       height: 100%;
       overflow: hidden;
       z-index: -1;
+      pointer-events: none;
     }
 
-    .floating-note {
+    .shape {
       position: absolute;
-      color: rgba(255, 255, 102, 0.3);
-      font-size: 2rem;
-      animation: float 6s ease-in-out infinite;
+      background: linear-gradient(45deg, #FFEB3B, #FDD835);
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      width: 100px;
+      height: 100px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 60px;
+      height: 60px;
+      top: 70%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+
+    .shape-3 {
+      width: 80px;
+      height: 80px;
+      bottom: 20%;
+      left: 70%;
+      animation-delay: 4s;
     }
 
     @keyframes float {
       0%, 100% {
         transform: translateY(0) rotate(0deg);
-        opacity: 0.3;
       }
-      50% {
-        transform: translateY(-20px) rotate(180deg);
-        opacity: 0.6;
+      33% {
+        transform: translateY(-20px) rotate(120deg);
+      }
+      66% {
+        transform: translateY(10px) rotate(240deg);
       }
     }
 
-    .note-1 { top: 10%; left: 10%; animation-delay: 0s; }
-    .note-2 { top: 20%; right: 15%; animation-delay: 1s; }
-    .note-3 { bottom: 20%; left: 20%; animation-delay: 2s; }
-    .note-4 { bottom: 10%; right: 10%; animation-delay: 3s; }
+    .form-switch-text {
+      text-align: center;
+      margin-top: 30px;
+      color: #666;
+    }
+
+    .switch-link {
+      color: #FFEB3B;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .switch-link:hover {
+      color: #FDD835;
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 20px 15px;
+      }
+      
+      .form-title {
+        font-size: 2rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <!-- Elementos flotantes decorativos -->
-    <div class="floating-elements">
-      <div class="floating-note note-1">♪</div>
-      <div class="floating-note note-2">♫</div>
-      <div class="floating-note note-3">♬</div>
-      <div class="floating-note note-4">♩</div>
+    <!-- Formas flotantes decorativas -->
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
     </div>
 
-    <!-- Botón de regreso -->
-    <button class="back-button" onclick="goToMainApp()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-
-    <!-- Formulario de Login -->
-    <div id="login-form" class="auth-form">
+    <!-- Header -->
+    <div class="header">
+      <button class="back-button" onclick="goToMainApp()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
       <div class="logo">Bealy</div>
-      <div class="subtitle">Inicia sesión para continuar</div>
-      
-      <div id="login-message"></div>
-      
-      <form onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <input type="email" class="form-input" placeholder="Correo electrónico" required>
-          <i class="fas fa-envelope input-icon"></i>
-        </div>
+      <div style="width: 44px;"></div> <!-- Spacer para centrar el logo -->
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <!-- Formulario de Login -->
+      <div id="login-form" class="auth-form">
+        <h1 class="form-title">¡Hola!</h1>
+        <p class="form-subtitle">Inicia sesión para continuar creando contenido increíble</p>
         
-        <div class="form-group">
-          <input type="password" class="form-input" placeholder="Contraseña" required>
-          <i class="fas fa-lock input-icon"></i>
-        </div>
+        <div id="login-message"></div>
         
-        <button type="submit" class="auth-button">Iniciar Sesión</button>
-      </form>
-      
-      <div class="auth-links">
-        <a href="#" class="auth-link" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a>
-        <a href="#" class="auth-link" onclick="showRegister()">Crear cuenta</a>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <input type="email" class="form-input" placeholder="Correo electrónico" required>
+          </div>
+          
+          <div class="form-group">
+            <input type="password" class="form-input" placeholder="Contraseña" required>
+          </div>
+          
+          <button type="submit" class="auth-button">Iniciar Sesión</button>
+        </form>
+        
+        <div class="form-links">
+          <a href="#" class="auth-link" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <div class="form-switch-text">
+          ¿No tienes cuenta?
+          <a href="#" class="switch-link" onclick="showRegister()">Regístrate</a>
+        </div>
       </div>
-    </div>
 
-    <!-- Formulario de Registro -->
-    <div id="register-form" class="auth-form hidden">
-      <div class="logo">Bealy</div>
-      <div class="subtitle">Crea tu cuenta</div>
-      
-      <div id="register-message"></div>
-      
-      <form onsubmit="handleRegister(event)">
-        <div class="form-group">
-          <input type="text" class="form-input" placeholder="Nombre completo" required>
-          <i class="fas fa-user input-icon"></i>
-        </div>
+      <!-- Formulario de Registro -->
+      <div id="register-form" class="auth-form hidden">
+        <h1 class="form-title">Crear Cuenta</h1>
+        <p class="form-subtitle">Únete a la comunidad de creadores</p>
         
-        <div class="form-group">
-          <input type="email" class="form-input" placeholder="Correo electrónico" required>
-          <i class="fas fa-envelope input-icon"></i>
-        </div>
+        <div id="register-message"></div>
         
-        <div class="form-group">
-          <input type="password" class="form-input" placeholder="Contraseña" required>
-          <i class="fas fa-lock input-icon"></i>
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <input type="text" class="form-input" placeholder="Nombre completo" required>
+          </div>
+          
+          <div class="form-group">
+            <input type="email" class="form-input" placeholder="Correo electrónico" required>
+          </div>
+          
+          <div class="form-group">
+            <input type="password" class="form-input" placeholder="Contraseña" required>
+          </div>
+          
+          <div class="form-group">
+            <input type="password" class="form-input" placeholder="Confirmar contraseña" required>
+          </div>
+          
+          <button type="submit" class="auth-button">Crear Cuenta</button>
+        </form>
+
+        <div class="form-switch-text">
+          ¿Ya tienes cuenta?
+          <a href="#" class="switch-link" onclick="showLogin()">Inicia sesión</a>
         </div>
-        
-        <div class="form-group">
-          <input type="password" class="form-input" placeholder="Confirmar contraseña" required>
-          <i class="fas fa-lock input-icon"></i>
-        </div>
-        
-        <button type="submit" class="auth-button">Crear Cuenta</button>
-      </form>
-      
-      <div class="form-switch">
-        <a href="#" class="auth-link" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</a>
       </div>
-    </div>
 
-    <!-- Formulario de Recuperación de Contraseña -->
-    <div id="forgot-form" class="auth-form hidden">
-      <div class="logo">Bealy</div>
-      <div class="subtitle">Recuperar contraseña</div>
-      
-      <div id="forgot-message"></div>
-      
-      <form onsubmit="handleForgotPassword(event)">
-        <div class="form-group">
-          <input type="email" class="form-input" placeholder="Correo electrónico" required>
-          <i class="fas fa-envelope input-icon"></i>
-        </div>
+      <!-- Formulario de Recuperación de Contraseña -->
+      <div id="forgot-form" class="auth-form hidden">
+        <h1 class="form-title">Recuperar</h1>
+        <p class="form-subtitle">Te enviaremos un enlace para restablecer tu contraseña</p>
         
-        <button type="submit" class="auth-button">Enviar enlace de recuperación</button>
-      </form>
-      
-      <div class="form-switch">
-        <a href="#" class="auth-link" onclick="showLogin()">Volver al inicio de sesión</a>
+        <div id="forgot-message"></div>
+        
+        <form onsubmit="handleForgotPassword(event)">
+          <div class="form-group">
+            <input type="email" class="form-input" placeholder="Correo electrónico" required>
+          </div>
+          
+          <button type="submit" class="auth-button">Enviar Enlace</button>
+        </form>
+
+        <div class="form-switch-text">
+          <a href="#" class="switch-link" onclick="showLogin()">Volver al inicio de sesión</a>
+        </div>
       </div>
     </div>
   </div>
@@ -360,14 +424,15 @@
 
     function showMessage(elementId, message, isSuccess = true) {
       const messageClass = isSuccess ? 'success-message' : 'error-message';
-      document.getElementById(elementId).innerHTML = `<div class="${messageClass}">${message}</div>`;
+      document.getElementById(elementId).innerHTML = `<div class="message ${messageClass}">${message}</div>`;
     }
 
     function handleLogin(event) {
       event.preventDefault();
-      const formData = new FormData(event.target);
+      const button = event.target.querySelector('.auth-button');
+      button.innerHTML = 'Iniciando sesión...';
+      button.disabled = true;
       
-      // Simulación de login (aquí iría la lógica real)
       setTimeout(() => {
         showMessage('login-message', '¡Bienvenido de vuelta!', true);
         setTimeout(() => {
@@ -378,9 +443,10 @@
 
     function handleRegister(event) {
       event.preventDefault();
-      const formData = new FormData(event.target);
+      const button = event.target.querySelector('.auth-button');
+      button.innerHTML = 'Creando cuenta...';
+      button.disabled = true;
       
-      // Simulación de registro (aquí iría la lógica real)
       setTimeout(() => {
         showMessage('register-message', '¡Cuenta creada exitosamente!', true);
         setTimeout(() => {
@@ -391,11 +457,16 @@
 
     function handleForgotPassword(event) {
       event.preventDefault();
-      const formData = new FormData(event.target);
+      const button = event.target.querySelector('.auth-button');
+      button.innerHTML = 'Enviando...';
+      button.disabled = true;
       
-      // Simulación de recuperación (aquí iría la lógica real)
       setTimeout(() => {
         showMessage('forgot-message', 'Se ha enviado un enlace de recuperación a tu correo.', true);
+        setTimeout(() => {
+          button.innerHTML = 'Enviar Enlace';
+          button.disabled = false;
+        }, 2000);
       }, 1000);
     }
 
@@ -403,9 +474,8 @@
       window.location.href = 'index.html';
     }
 
-    // Animación inicial
+    // Mostrar formulario de login por defecto
     document.addEventListener('DOMContentLoaded', function() {
-      // Mostrar formulario de login por defecto
       showLogin();
     });
   </script>
